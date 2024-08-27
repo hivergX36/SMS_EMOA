@@ -53,8 +53,12 @@ class Solution:
         
   def repaire(self):
         indlistadd = [i for i in range(self.NbVariable) if self.solution[i] == 1]
-        indice = random.choice(indlistadd)
-        self.solution[indice] = 0
+        if len(indlistadd) > 1:
+              indice = random.choice(indlistadd)
+              self.solution[indice] = 0
+        else:
+              indice = random.choice(self.NbVariable)
+              self.solution[indice] = 1
         
   def checkandrepaire(self,compteur):
         check = True
@@ -62,8 +66,8 @@ class Solution:
               print(self.SumConstraint[k])
               if(self.SumConstraint[k] > self.listConstraint[k] or self.SumConstraint[k] == 0):
                     check = False
-                    compteur += 1 
                     if(compteur < 1):
+                          compteur += 1 
                           self.repaire()
                           self.checkandrepaire(compteur)
                     break
@@ -86,12 +90,12 @@ class SMSemoaAlgorithm():
         self.NbObjectives = 0 
         self.NbConstraint = 0 
         self.Population = []
-        self.Sample = [] 
+        self.Sample = 0 
         self.PriceVariable = []
         self.Constraint = []
         self.MatrixConstraint = []
         self.front = []
-        self.hypervolumemesure 
+        self.hypervolumemesure = []
         self.idealpoint = 0 
         self.nadirpoint = 0 
         self.List = []
@@ -201,7 +205,6 @@ class SMSemoaAlgorithm():
         self.List.sort(key = lambda x : x.rank)
         numberRank = self.List[-1].rank  
         self.front = [[self.List[i] for i in range(len(self.List)) if self.List[i].rank == r] for r in range(numberRank + 1)]
-        print("Bonjour2", self.front)
         while len(self.front[-1]) < 1:
               self.front = self.front[0:(len(self.front) - 1)]
         
@@ -260,10 +263,7 @@ class SMSemoaAlgorithm():
         
                     
     
-                    
-              
-def tounament(self):
-        compteur = 0
+def tounament_parent_selection(self):
         while(compteur < self.NbInd):
               AddList = []
               for i in range(2):
@@ -274,18 +274,17 @@ def tounament(self):
                     indicesolution = random.randrange(0, len(self.front[indicefront]))
                     randomIndividual = self.front[indicefront][indicesolution]
                     AddList.append(randomIndividual)
-                    
-             
-
               AddList.sort(key = lambda x: x.rank) 
               if AddList[0].rank == AddList[1].rank and AddList[1].crowdingdistance > AddList[0].crowdingdistance:
-                    self.Sample.append(AddList[0])
+                    self.Sample.append(AddList[1])
               else:
                     self.Sample.append(AddList[0])
               compteur+=1
               
+
               
-  def crossOverMutation(self):
+              
+def crossOverMutation(self):
         ind_Parent1 = random.randrange(0,self.NbInd)
         ind_Parent2 = random.randrange(0,self.NbInd)
         ind_crossover = random.randrange(0,self.NbVariable); 
@@ -307,9 +306,9 @@ def tounament(self):
                     self.Sample[ind_Parent1].calculatefitnessvalue(self.PriceVariable)
    
   
-  
-  
-  def UpdatePopulation(self):
+
+
+def UpdatePopulation(self):
         compteur = 0 
         arret = False 
         self.List = [self.Population[i] for i in range(self.NbPop)]
@@ -318,25 +317,15 @@ def tounament(self):
         self.rankList()
         self.frontList()
         self.measurecrowdingdistance()
-        self.Population = []
-        for i in range(len(self.front)):
-              if arret == True:
-                    break 
-              for j in range(len(self.front[i])):
-                    self.Population.append(self.front[i][j])
-                    compteur =+ 1 
-                    if compteur == self.NbPop:
-                          arret = True
-                          break
-                    
-              
+        self.Population = self.List
+       
               
         
 
 
   
         
-  def resolve(self, Nbgen):
+def resolve(self, Nbgen):
         self.initPopulation()
         self.computeExtremePoint()
         self.displayPopulation()
@@ -345,13 +334,12 @@ def tounament(self):
               self.rankPopulation()
               self.displayPopulation()     
               self.definePopulationfront()
-              self.measurecrowdingdistance()
-              self.tounament()              
+              self.tounament_parent_selection()
               NbMutation = random.randrange(self.NbInd)
-              self.displaySample()
               for j in range(NbMutation):
                     self.crossOverMutation()
               self.UpdatePopulation()
+              self.hypervolumemesuretournament()
         self.displayPopulation()     
 
 
