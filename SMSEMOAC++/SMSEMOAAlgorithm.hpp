@@ -7,7 +7,7 @@
 #include <algorithm>
 #include "Solution.hpp"
 
-   struct NSGAIIAlgorithme{
+   struct SmsEmoaAlgorithme{
 
     int NbVariable;
     int NbConstraints;
@@ -40,7 +40,7 @@
 
 
  
-    NSGAIIAlgorithme(std::string name, int nbpop, int nbind){
+    SmsEmoaAlgorithme(std::string name, int nbpop, int nbind){
 
         int k = 0;
         int number;
@@ -822,6 +822,7 @@ void displayCrowdingDistance(){
             nb_one++;  
             }
         }
+        if(nb_one < NbVariable){
         int listChoix[nb_one];
         for(int i = 0; i < NbVariable; i++){
             if(Enfant.solution[0][i] > 0){
@@ -834,6 +835,9 @@ void displayCrowdingDistance(){
         std::cout << "indice à supprimer: " << indice << std::endl;
         choix = listChoix[indice];
         Enfant.solution[0][choix] = 0;
+        }else{
+            indice = rand() % nb_one
+        }
 
     }
 
@@ -843,7 +847,7 @@ void displayCrowdingDistance(){
 
 //Update by rank and crowding distance 
 
-   void UpdateElitePopulation(){
+   void UpdatePopulation(){
     int compteur = 0; 
     int indicefront = 0;
     bool Update = false;

@@ -1,5 +1,3 @@
 {
-    "files.associations": {
-        "iostream": "cpp"
-    }
+    "java.dependency.syncWithFolderExplorer": false
 }
