@@ -32,7 +32,7 @@
     std::vector<float> * constraint;
     std::vector<Solution> * Population; 
     std::vector<Solution> * Echantillon; 
-    std::vector<std::vector<Solution>> * Front; 
+    std::vector<std::vector<Solution>> * Front;
     Solution IdealPoint; 
     Solution NadirPoint; 
 
@@ -450,6 +450,25 @@ void measureCrowdingDistance(std::vector<Solution>* List){
 
 }
 
+void hypervolumemeasure(){
+    int lengthfront = Front[0].size();
+    float volume = 0;
+    sort(Front[0][lengthfront - 1].begin(),Front[0][lengthfront - 1].end(),Solution());
+    int vecsize = Front[0][lengthfront].size();
+        std::cout << "taille du vecteur" << vecsize << std::endl;
+        Front[0][lengthfront][0].volumeMeasure = std::numeric_limits<double>::max();
+        Front[0][lengthfront][vecsize - 1].volumeMeasure = std::numeric_limits<double>::max();
+        for(int k = 1; k < vecsize - 1; k ++){
+
+            Front[0][lengthfront][k].volumeMeasure = (Front[0][lengthfront][k + 1].FitnessValue1 - Front[0][lengthfront][k].FitnessValue1)  * (Front[0][lengthfront][k - 1].FitnessValue2 - Front[0][lengthfront][k].FitnessValue2 );
+
+        }
+
+
+
+        
+    }
+
 
 //Display the norm1 value  
 
@@ -508,7 +527,7 @@ void displayCrowdingDistance(){
     }
 
 
-    void displayProblemVega(){
+    void displayProblemSMSemoa(){
 
 
 
@@ -836,7 +855,7 @@ void displayCrowdingDistance(){
         choix = listChoix[indice];
         Enfant.solution[0][choix] = 0;
         }else{
-            indice = rand() % nb_one
+            indice = rand() % nb_one;
         }
 
     }
@@ -845,10 +864,12 @@ void displayCrowdingDistance(){
 
  
 
-//Update by rank and crowding distance 
+
+//Update by rank and hypervolume measure
 
    void UpdatePopulation(){
     int compteur = 0; 
+    int lenghtfront = 0; 
     int indicefront = 0;
     bool Update = false;
     int indiceVec = 0;
@@ -866,8 +887,10 @@ void displayCrowdingDistance(){
     defineFront(List,nbListInd);
     measureCrowdingDistance();
     displayCrowdingDistance();
+    hypervolumemeasure();
+    lenghtfront = Front[0].size(); 
+    sort(Front[0][lenghtfront - 1].begin(), Front[0][lenghtfront - 1].end(),RangeHyperVolumeMeasure());
     while(compteur < NbPop){
-    sort(Front[0][indicefront].begin(), Front[0][indicefront].end(),RangeRankcrowdingMeasure());
     for(int k = 0; k < Front[0][indicefront].size();k++){
         Population[0][compteur] = Front[0][indicefront][k];
         compteur++;
@@ -882,31 +905,28 @@ void displayCrowdingDistance(){
 
 void resolve(int Nbgen){ 
 int nbCrossover;
-displayProblemVega();
+displayProblemSMSemoa();
 computeExtremePoint();
 initPopulation();
 displayPopulation();
    fitnessValuePop();
-        rankPopulation();
-
-   displayPopulation();
+    rankPopulation();
+    displayPopulation();
    for(int k = 0; k < Nbgen; k++){
     definePopulationfront();
     measureCrowdingDistance();
     Tournament();
    displayEchantillon();
-   for(int i = 0; i < 5; i++){
-      try{
+
    CrossoverMutation();
-   }catch(int err){
-      std::cout << "Il y'a un problème dans la fonction";
-   }
-   };
- UpdateElitePopulation();
+
+
+UpdatePopulation();
    displayPopulation();
 
    }
+ 
 }
-
-
+   
 };
+

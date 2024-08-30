@@ -18,6 +18,7 @@ struct Solution{
     bool fitnessCalculated;
     bool checkrank;
     float crowdingdistance;
+    float volumeMeasure;
 
     Solution(){
         solution = new std::vector<int>;
@@ -29,6 +30,8 @@ struct Solution{
          rank = 0;
          checkrank = false;
          crowdingdistance = 0;
+         volumeMeasure = 0;
+         
     
 
     }
@@ -111,3 +114,8 @@ struct RangeRankSolution:Solution {
 struct RangeRankcrowdingMeasure:Solution {
     int operator()(Solution ind1, Solution ind2){ return ind1.crowdingdistance > ind2.crowdingdistance; }
 };
+
+struct RangeHyperVolumeMeasure:Solution{
+    int operator()(Solution ind1, Solution ind2){return ind1.volumeMeasure > ind2.volumeMeasure; }
+};
+

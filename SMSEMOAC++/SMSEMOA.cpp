@@ -1,7 +1,7 @@
 #include<iostream> 
 #include<vector> 
 #include<fstream> 
-#include "NSGAIIAlgorithm.hpp"
+#include "SMSEMOAAlgorithm.hpp"
 
 int main(){
       
